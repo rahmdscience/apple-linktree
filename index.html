@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Link Profil - Apple Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Menyembunyikan scrollbar untuk tampilan yang sangat clean */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: white;
+            --apple-text: #1d1d1f;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            color: var(--apple-text);
+        }
+
+        .circuit-wrapper {
+            min-height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+            background-color: white;
+        }
+
+        .circuit-background {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            pointer-events: none;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 19px,
+                rgba(75, 85, 99, 0.08) 19px,
+                rgba(75, 85, 99, 0.08) 20px,
+                transparent 20px,
+                transparent 39px,
+                rgba(75, 85, 99, 0.08) 39px,
+                rgba(75, 85, 99, 0.08) 40px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 19px,
+                rgba(75, 85, 99, 0.08) 19px,
+                rgba(75, 85, 99, 0.08) 20px,
+                transparent 20px,
+                transparent 39px,
+                rgba(75, 85, 99, 0.08) 39px,
+                rgba(75, 85, 99, 0.08) 40px
+            ),
+            radial-gradient(
+                circle at 20px 20px,
+                rgba(55, 65, 81, 0.12) 2px,
+                transparent 2px
+            ),
+            radial-gradient(
+                circle at 40px 40px,
+                rgba(55, 65, 81, 0.12) 2px,
+                transparent 2px
+            );
+            background-size:
+                40px 40px,
+                40px 40px,
+                40px 40px,
+                40px 40px;
+            will-change: transform; /* Optimasi hardware */
+        }
+
+        .apple-glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 
+                0 8px 32px -4px rgba(0, 0, 0, 0.08),
+                0 0 2px 0 rgba(255, 255, 255, 1) inset;
+            will-change: transform, box-shadow;
+        }
+
+        .glass-btn {
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transform: translateZ(0); 
+        }
+
+        .glass-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            will-change: opacity;
+        }
+
+        .glass-btn:hover {
+            transform: scale(1.02) translateY(-2px) translateZ(0);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 12px 32px -4px rgba(0, 0, 0, 0.12),
+                0 0 0 1px rgba(0, 0, 0, 0.04);
+        }
+
+        .glass-btn:hover::before {
+            opacity: 1;
+        }
+
+        .glass-btn:active {
+            transform: scale(0.98) translateZ(0);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 70%);
+            transform: scale(0);
+            animation: ripple-effect 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+
+        @keyframes ripple-effect {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @keyframes appleReveal {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 20px, 0) scale(0.98); 
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+        }
+
+        .stagger-item {
+            opacity: 0;
+            will-change: transform, opacity;
+            animation: appleReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-item:nth-child(4) { animation-delay: 0.4s; }
+        .stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .accordion-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: grid-template-rows;
+        }
+        
+        .accordion-wrapper.open { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+
+        .project-item {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            will-change: transform, background;
+            transform: translateZ(0);
+        }
+        .project-item:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transform: translateX(4px) translateZ(0);
+        }
+
+        .chevron {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+        .accordion-wrapper.open ~ * .chevron,
+        .is-open .chevron { transform: rotate(180deg); }
+
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+            width: 100%;
+        }
+        .carousel-container::-webkit-scrollbar { display: none; }
+        .carousel-slide {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        .dot.active {
+            background-color: #1d1d1f;
+            transform: scale(1.3);
+        }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 100; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 24px; padding: 24px; 
+            width: 100%; max-width: 320px; /* Responsive modal */
+            transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        .modal-btn {
+            flex: 1; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 15px;
+            cursor: pointer; transition: background 0.2s; border: none;
+        }
+        .modal-btn.cancel { background: rgba(0, 0, 0, 0.05); color: #1d1d1f; }
+        .modal-btn.cancel:hover { background: rgba(0, 0, 0, 0.1); }
+        .modal-btn.proceed { background: #0071e3; color: white; }
+        .modal-btn.proceed:hover { background: #0077ed; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="circuit-wrapper">
+        <div class="circuit-background"></div>
+    </div>
+
+    <!-- Responsive Container: Adaptif untuk Mobile Small s/d Tablet -->
+    <main class="w-[90%] max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto z-10 flex flex-col items-center my-auto py-8 sm:py-12 md:py-16">
+        
+        <header class="flex flex-col items-center text-center mb-6 sm:mb-8 w-full stagger-item">
+            <!-- Responsive Image: Membesar perlahan dari sm ke md -->
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 mb-4 sm:mb-5 group interactive-element" style="border-radius: 50%;">
+                <div class="absolute inset-0 rounded-full apple-glass group-hover:scale-105 transition-transform duration-500 scale-100 will-change-transform"></div>
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+                     alt="Foto Profil" 
+                     class="absolute inset-1 w-[calc(100%-8px)] h-[calc(100%-8px)] object-cover rounded-full shadow-sm"
+                     draggable="false">
+            </div>
+            
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mb-1 sm:mb-1.5 text-[#1d1d1f]" style="letter-spacing: -0.5px;">Rahmad Sains A.H</h1>
+            <p class="text-xs sm:text-sm md:text-base font-medium text-gray-600 mb-2 sm:mb-3 bg-white/70 backdrop-blur-md px-4 sm:px-5 py-1 sm:py-1.5 rounded-full border border-gray-200 shadow-sm">
+                Mahasiswa
+            </p>
+        </header>
+
+        <nav class="flex flex-col gap-3 sm:gap-4 w-full">
+            <!-- Instagram -->
+            <a href="https://instagram.com/rahmdsai" target="_blank" class="interactive-element stagger-item apple-glass glass-btn flex items-center justify-between w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-full text-[#1d1d1f] font-semibold text-[14px] sm:text-[15px] md:text-[16px] decoration-none">
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1d1d1f]" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+                    <span>Instagram (@rahmdsai)</span>
+                </div>
+            </a>
+            
+            <!-- GitHub -->
+            <a href="https://github.com/rahmdscience" target="_blank" class="interactive-element stagger-item apple-glass glass-btn flex items-center justify-between w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-full text-[#1d1d1f] font-semibold text-[14px] sm:text-[15px] md:text-[16px] decoration-none">
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1d1d1f]" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
+                    <span>GitHub (@rahmdscience)</span>
+                </div>
+            </a>
+            
+            <!-- Spotify -->
+            <a href="https://open.spotify.com/user/31bvb6dnlkknu6ttgq5dvja7n2bq?nd=1&dlsi=d30c9950fcf64edc" target="_blank" class="interactive-element stagger-item apple-glass glass-btn flex items-center justify-between w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-full text-[#1d1d1f] font-semibold text-[14px] sm:text-[15px] md:text-[16px] decoration-none">
+                <div class="flex items-center gap-2.5 sm:gap-3">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1d1d1f]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.467-.077-.334.132-.67.467-.746 3.843-.88 7.106-.51 9.715 1.082.295.18.388.563.207.857zm1.22-2.736c-.226.368-.707.487-1.076.26-2.684-1.65-6.785-2.13-9.965-1.166-.406.122-.84-.106-.963-.513-.122-.406.106-.84.514-.963 3.65-1.106 8.22-.575 11.23 1.275.368.226.487.707.26 1.076zm.106-2.88c-3.21-1.905-8.5-2.08-11.56-1.15-.494.15-1.02-.13-1.17-.624-.15-.495.13-1.02.624-1.17 3.51-1.07 9.35-.87 13.06 1.33.443.26.586.838.326 1.28-.26.443-.838.586-1.28.326z"/></svg>
+                    <span>Spotify Playlist</span>
+                </div>
+            </a>
+            
+            <div class="w-full stagger-item">
+                <div id="projectToggleBtn" class="interactive-element apple-glass glass-btn flex items-center justify-between w-full px-5 py-3.5 sm:px-6 sm:py-4 rounded-full text-[#1d1d1f] font-semibold text-[14px] sm:text-[15px] md:text-[16px] decoration-none select-none z-20 relative cursor-pointer">
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#1d1d1f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span>Projects</span>
+                    </div>
+                    <svg class="chevron w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                
+                <div id="projectWrapper" class="accordion-wrapper mt-2 sm:mt-3 relative z-10">
+                    <div class="accordion-inner apple-glass rounded-[20px] sm:rounded-3xl shadow-md border border-gray-200/50">
+                        
+                        <!-- Menu Utama: Kategori -->
+                        <div id="viewCategories" class="p-2 sm:p-3 flex flex-col gap-1 sm:gap-1.5 transition-all duration-300">
+                            <div class="category-btn interactive-element project-item p-3 sm:p-4 rounded-2xl text-[#1d1d1f] flex items-center justify-between cursor-pointer decoration-none relative overflow-hidden" data-target="ekstensi">
+                                <span class="font-semibold text-[14px] sm:text-[15px]">1. Ekstensi</span>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            <div class="category-btn interactive-element project-item p-3 sm:p-4 rounded-2xl text-[#1d1d1f] flex items-center justify-between cursor-pointer decoration-none relative overflow-hidden" data-target="website">
+                                <span class="font-semibold text-[14px] sm:text-[15px]">2. Website</span>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            <div class="category-btn interactive-element project-item p-3 sm:p-4 rounded-2xl text-[#1d1d1f] flex items-center justify-between cursor-pointer decoration-none relative overflow-hidden" data-target="tools">
+                                <span class="font-semibold text-[14px] sm:text-[15px]">3. Tools</span>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                        </div>
+
+                        <!-- Sub-menu: Daftar Proyek Berdasarkan Kategori -->
+                        <div id="viewProjects" class="hidden p-2 sm:p-3 flex-col gap-1 transition-all duration-300">
+                            <!-- Tombol Kembali -->
+                            <div id="btnBackCategories" class="interactive-element project-item p-2 px-3 mb-1 sm:mb-2 rounded-xl text-[#0071e3] flex items-center gap-1 sm:gap-2 cursor-pointer w-fit decoration-none relative overflow-hidden">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                                <span class="font-semibold text-[13px] sm:text-sm">Kembali</span>
+                            </div>
+                            
+                            <div id="list-ekstensi" class="project-list hidden flex-col w-full">
+                                <div class="carousel-container" onscroll="updateDots(this, 'dots-ekstensi')">
+                                    <!-- Page 1 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/chrome-adblock" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">AdBlocker Plus</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Ekstensi browser untuk memblokir iklan.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/seo-helper" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">SEO Helper</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Analisis meta tag website secara instan.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 2 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/color-picker" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Color Picker Pro</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Ambil palet warna dari website apa saja.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/grammar-checker" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Grammar Fixer</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Koreksi tata bahasa otomatis saat mengetik.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 3 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/json-formatter" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">JSON Formatter</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Format dan validasi kode JSON secara instan.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/pass-gen" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Password Gen</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Buat kata sandi acak yang kuat dan aman.</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="dots-ekstensi" class="dots-container">
+                                    <div class="dot active"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+
+                            <div id="list-website" class="project-list hidden flex-col w-full">
+                                <div class="carousel-container" onscroll="updateDots(this, 'dots-website')">
+                                    <!-- Page 1 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/ecommerce" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">E-commerce Platform</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Aplikasi jual beli dengan payment terintegrasi.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/portfolio" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Portfolio UI Kit</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Desain sistem dan komponen UI untuk portofolio.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 2 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/weather-pwa" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Weather PWA</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Aplikasi cuaca progresif bisa diinstal offline.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/music-ui" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Music Streaming UI</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Tampilan pemutar musik modern bergaya Apple.</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="dots-website" class="dots-container">
+                                    <div class="dot active"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+
+                            <div id="list-tools" class="project-list hidden flex-col w-full">
+                                <div class="carousel-container" onscroll="updateDots(this, 'dots-tools')">
+                                    <!-- Page 1 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/ai-chatbot" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">AI Chatbot Assistant</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Sistem tanya jawab otomatis berbasis NLP.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/pos-system" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Point of Sale (POS)</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Sistem manajemen kasir cerdas untuk UMKM.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 2 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/auth-gateway" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Auth Gateway Service</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Layanan otentikasi terpusat berbasis OAuth2.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/format-converter" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Format Converter</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Konversi berbagai jenis file secara lokal.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 3 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/image-compressor" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Image Compressor</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Kompres ukuran gambar tanpa mengurangi kualitas.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/code-snippets" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Snippet Manager</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Simpan dan kelola potongan kode favorit Anda.</span>
+                                        </a>
+                                    </div>
+                                    <!-- Page 4 -->
+                                    <div class="carousel-slide">
+                                        <a href="https://github.com/rahmdscience/regex-tester" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">Regex Tester</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Uji dan pelajari ekspresi reguler interaktif.</span>
+                                        </a>
+                                        <a href="https://github.com/rahmdscience/css-generator" class="interactive-element project-link project-item p-3 sm:p-3.5 rounded-2xl text-[#1d1d1f] flex flex-col items-start decoration-none relative overflow-hidden">
+                                            <span class="font-semibold text-[13px] sm:text-[14px] md:text-[15px]">CSS Generator</span>
+                                            <span class="text-[11px] sm:text-[12px] md:text-[13px] text-gray-500 mt-1 leading-relaxed">Buat dan pratinjau gradien CSS untuk website.</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="dots-tools" class="dots-container">
+                                    <div class="dot active"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </main>
+
+    <div id="warningModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="mb-4 sm:mb-5 text-gray-800">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-[#0071e3] mb-2 sm:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <h3 class="text-base sm:text-lg font-bold text-[#1d1d1f]">Meninggalkan Halaman</h3>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1.5 sm:mt-2">Anda akan dialihkan ke halaman proyek eksternal. Lanjutkan?</p>
+            </div>
+            <div class="flex gap-2 sm:gap-3 mt-4 sm:mt-6">
+                <button id="btnCancel" class="modal-btn cancel text-sm sm:text-base">Batal</button>
+                <button id="btnProceed" class="modal-btn proceed text-sm sm:text-base">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Fungsi membuat suara Water Drop (Pop lembut)
+        function playWaterDropSound() {
+            if (!audioCtx) return;
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            osc.type = 'sine';
+            
+            // Pitch naik cepat
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+            
+            // Volume attack & decay
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(0.6, now + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            
+            osc.start(now);
+            osc.stop(now + 0.25);
+        }
+
+        // Fungsi membuat Efek Ripple Visual
+        function createRipple(event, element) {
+            const circle = document.createElement("span");
+            const diameter = Math.max(element.clientWidth, element.clientHeight);
+            const radius = diameter / 2;
+            
+            const rect = element.getBoundingClientRect();
+            
+            // Handle touch vs mouse event for accurate position
+            let clientX, clientY;
+            if (event.type.includes('touch') && event.touches.length > 0) {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else {
+                clientX = event.clientX || rect.left + radius;
+                clientY = event.clientY || rect.top + radius;
+            }
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${clientX - rect.left - radius}px`;
+            circle.style.top = `${clientY - rect.top - radius}px`;
+            circle.classList.add("ripple");
+            
+            const existingRipple = element.querySelector('.ripple');
+            if(existingRipple) existingRipple.remove();
+
+            element.appendChild(circle);
+            
+            setTimeout(() => {
+                if(circle && circle.parentNode) circle.remove();
+            }, 800);
+        }
+
+        function updateDots(container, dotsId) {
+            const scrollLeft = container.scrollLeft;
+            const slideWidth = container.clientWidth;
+            
+            // Dapatkan index aktif berdasarkan posisi scroll
+            const activeIndex = Math.round(scrollLeft / slideWidth);
+            
+            const dotsContainer = document.getElementById(dotsId);
+            if (dotsContainer) {
+                const dots = dotsContainer.querySelectorAll('.dot');
+                dots.forEach((dot, index) => {
+                    if (index === activeIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const interactiveElements = document.querySelectorAll('.interactive-element');
+            
+            interactiveElements.forEach(el => {
+                // Gunakan pointerdown agar mensupport mouse & touch secara bersamaan
+                el.addEventListener('pointerdown', (e) => {
+                    initAudio();
+                    playWaterDropSound();
+                    
+                    if(getComputedStyle(el).position === 'static') {
+                        el.style.position = 'relative';
+                        el.style.overflow = 'hidden';
+                    }
+                    requestAnimationFrame(() => {
+                        createRipple(e, el);
+                    });
+                });
+            });
+
+            const projectToggleBtn = document.getElementById('projectToggleBtn');
+            const projectWrapper = document.getElementById('projectWrapper');
+            
+            const viewCategories = document.getElementById('viewCategories');
+            const viewProjects = document.getElementById('viewProjects');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const btnBackCategories = document.getElementById('btnBackCategories');
+            const projectLists = document.querySelectorAll('.project-list');
+            
+            projectToggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                projectToggleBtn.classList.toggle('is-open');
+                projectWrapper.classList.toggle('open');
+                
+                // Auto-scroll ke bawah saat menu dibuka
+                if(projectWrapper.classList.contains('open')) {
+                    setTimeout(() => {
+                        window.scrollBy({ top: 350, behavior: 'smooth' });
+                    }, 300); 
+                } else {
+                    // Reset ke menu awal kategori jika ditutup
+                    setTimeout(() => {
+                        viewProjects.classList.add('hidden');
+                        viewProjects.classList.remove('flex');
+                        viewCategories.classList.remove('hidden');
+                        viewCategories.classList.add('flex');
+                    }, 500);
+                }
+            });
+
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    
+                    // Sembunyikan semua list anak
+                    projectLists.forEach(list => {
+                        list.classList.add('hidden');
+                        list.classList.remove('flex');
+                    });
+                    
+                    // Tampilkan hanya list yang dipilih
+                    const targetList = document.getElementById('list-' + targetId);
+                    if(targetList) {
+                        targetList.classList.remove('hidden');
+                        targetList.classList.add('flex');
+                        // Reset scroll horizontal slider ke paling kiri
+                        const carousel = targetList.querySelector('.carousel-container');
+                        if (carousel) carousel.scrollLeft = 0;
+                    }
+                    
+                    // Ganti view
+                    viewCategories.classList.add('hidden');
+                    viewCategories.classList.remove('flex');
+                    
+                    viewProjects.classList.remove('hidden');
+                    viewProjects.classList.add('flex');
+                });
+            });
+
+            btnBackCategories.addEventListener('click', () => {
+                viewProjects.classList.add('hidden');
+                viewProjects.classList.remove('flex');
+                
+                viewCategories.classList.remove('hidden');
+                viewCategories.classList.add('flex');
+            });
+
+            // Logika Custom Modal
+            const modal = document.getElementById('warningModal');
+            const btnCancel = document.getElementById('btnCancel');
+            const btnProceed = document.getElementById('btnProceed');
+            let pendingUrl = '';
+
+            document.querySelectorAll('.project-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    pendingUrl = link.href;
+                    modal.classList.add('active'); 
+                });
+            });
+
+            btnCancel.addEventListener('click', () => {
+                modal.classList.remove('active');
+                pendingUrl = '';
+            });
+
+            btnProceed.addEventListener('click', () => {
+                if(pendingUrl) {
+                    window.open(pendingUrl, '_blank');
+                }
+                modal.classList.remove('active');
+                pendingUrl = '';
+            });
+        });
+    </script>
+</body>
+</html>
